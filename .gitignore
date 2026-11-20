@@ -1,0 +1,5 @@
+node_modules/
+.hearth/
+hearth.yaml
+*.log
+.bench-work/

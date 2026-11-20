@@ -1,0 +1,3 @@
+# Keep LF everywhere (the project and its tests assume LF; see AGENTS.md).
+* text=auto eol=lf
+*.cmd text eol=crlf

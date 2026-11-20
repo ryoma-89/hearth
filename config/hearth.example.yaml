@@ -1,0 +1,108 @@
+# Hearth configuration example.
+# Copy to hearth.yaml in the project root (or point HEARTH_CONFIG / --config at it).
+# Only the fields you change are needed; everything else uses built-in defaults
+# (see src/config/defaults.ts). Relative paths resolve against this file's folder.
+#
+# API keys are NEVER written here. Use either
+#   apiKey: { env: VAR_NAME }   -> read from an environment variable
+#   apiKey: { secret: NAME }    -> Windows DPAPI file created by: hearth secret set NAME
+#   apiKey: none                -> no key (local servers without auth)
+
+defaultModel: strata/auto       # auto = the model STRATA has loaded now (follows switches in STRATA)
+defaultMode: medium            # low | medium | high | maximum
+defaultWorkspace: .            # used when a task does not name a workspace
+
+providers:
+  # STRATA's OpenAI-compatible API is served by the STRATA host (default
+  # 127.0.0.1:47831) with the serving API key from STRATA's settings. Port 18500
+  # is the engine's internal port and uses a different, internal key.
+  strata:
+    displayName: STRATA (local)
+    baseURL: http://127.0.0.1:47831/v1
+    apiKey: { secret: strata }
+    discoverModels: true       # import whatever GET /v1/models reports (no need to list every model below)
+    discoveredModelDefaults:   # assumed for discovered models the server does not describe
+      contextWindow: 131072
+      maxTokens: 32768
+      reasoning: true
+      toolCalling: native
+      input: [text]
+    timeoutMs: 3600000         # idle-stream timeout; long prefill on big contexts
+    compat:
+      supportsStore: false
+      thinkingFormat: chat-template
+      chatTemplateKwargs:
+        enable_thinking: { $var: thinking.enabled }
+        reasoning_effort: { $var: thinking.effort, omitWhenOff: true }
+    models:
+      - id: nvfp4-nvfp4                       # optional: list models only to override discovered defaults
+        displayName: Qwen3.8-Flash-Next NVFP4
+        contextWindow: 131072
+        maxTokens: 32768
+        reasoning: true
+        toolCalling: native
+
+  # LM Studio (enable its local server first). Remove the leading '#' to use.
+  # lmstudio:
+  #   baseURL: http://127.0.0.1:1234/v1
+  #   apiKey: none
+  #   compat: { supportsStore: false }
+  #   models:
+  #     - { id: qwen3-coder-30b, contextWindow: 65536, maxTokens: 8192 }
+
+  # llama.cpp server (llama-server --jinja for tool calls)
+  # llamacpp:
+  #   baseURL: http://127.0.0.1:8081/v1
+  #   apiKey: none
+  #   compat: { supportsStore: false }
+  #   models:
+  #     - { id: local, contextWindow: 32768, maxTokens: 4096 }
+
+  # Cloud example (OpenAI). Remote prompts leave this machine.
+  # openai:
+  #   api: openai-responses
+  #   baseURL: https://api.openai.com/v1
+  #   apiKey: { secret: openai }
+  #   models:
+  #     - { id: gpt-5.1, contextWindow: 400000, maxTokens: 128000, reasoning: true }
+
+queue:
+  maxConcurrentInference: 1    # model requests in flight across ALL tasks/clients
+  maxConcurrentTasks: 1        # DSH task processes running at once
+  leaseTtlMs: 60000            # a lease without heartbeat for this long is reclaimed
+  maxLeaseMs: 1800000          # one model request may hold the slot at most this long
+  taskTimeoutMs: 14400000
+
+security:
+  sandbox: workspace-write     # read-only | workspace-write | danger-full-access
+  allowedWorkspaceRoots:       # tasks may only run in these folders (and below)
+    - E:/development
+  allowOverwrite: true
+  allowDangerousCommands: false   # headless runs have no approver: dangerous = refused
+  protectedPaths: ['.git/**', '.hearth/**', '**/.env', '**/.env.*', '**/*.pem', '**/*.key', '**/id_rsa*']
+  trustedCommands: []          # command names never flagged (use sparingly)
+  extraDangerousCommands: []
+  deleteMode: backup           # backup: copy files before delete/overwrite | deny: refuse deletes | allow
+  backupMaxBytes: 209715200    # per-task backup quota (200 MB); larger deletes are refused
+
+# Web search for the web_search tool (web_fetch always works).
+# none | searxng (recommended, self-hosted) | duckduckgo (may hit bot detection)
+web:
+  search: none
+  searxngURL: ''               # e.g. http://127.0.0.1:8888 (enable the json format in SearXNG)
+
+tools:
+  pythonExecutable: python
+  latexEngine: uplatex
+  dvipdfmx: dvipdfmx
+
+# Per-mode overrides (any field from `hearth modes`)
+modes:
+  maximum:
+    maxSteps: 150
+    verificationRounds: 4      # fix rounds after failed turn-end verification
+    strictVerification: true   # overfull boxes, undefined refs, unembedded fonts count as failures
+
+daemon:
+  host: 127.0.0.1              # loopback only in this version
+  port: 47900

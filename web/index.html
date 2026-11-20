@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Hearth</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/style.css">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <div class="app" id="app">
+    <aside class="sidebar" id="sidebar" aria-label="会話">
+      <div class="sidebar-head">
+        <span class="brand"><img src="/favicon.svg" alt="" width="20" height="20"> Hearth</span>
+        <button class="icon-btn only-mobile" id="close-sidebar" aria-label="閉じる">✕</button>
+      </div>
+      <button class="new-chat" id="new-chat">＋ 新しい会話</button>
+      <nav class="conv-list" id="conv-list"></nav>
+      <div class="sidebar-foot">
+        <button class="link-btn" id="open-settings">⚙ 設定と状態</button>
+      </div>
+    </aside>
+    <div class="scrim" id="scrim" hidden></div>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="icon-btn only-mobile" id="open-sidebar" aria-label="会話一覧">☰</button>
+        <h1 class="conv-title" id="conv-title">新しい会話</h1>
+        <div class="status-pills" id="status-pills"></div>
+      </header>
+
+      <section class="messages" id="messages" aria-live="polite">
+        <div class="empty" id="empty">
+          <h2>ローカル LLM エージェント</h2>
+          <p>作業フォルダ・モデル・モードを選んでタスクを入力してください。ファイルの作成、Python 実行、LaTeX の PDF 化などを、検証しながら実行します。</p>
+        </div>
+      </section>
+
+      <form class="composer" id="composer">
+        <div class="composer-options">
+          <label class="fixed-in-conv">作業フォルダ
+            <input id="workspace" list="workspace-list" autocomplete="off" spellcheck="false">
+            <datalist id="workspace-list"></datalist>
+          </label>
+          <label>モデル <select id="model"></select><button type="button" class="icon-btn small" id="refresh-models" title="サーバーのモデル一覧を再取得" aria-label="モデル一覧を再取得">↻</button></label>
+          <label>モード <select id="mode"></select></label>
+        </div>
+        <div class="attachments" id="attachments"></div>
+        <div class="composer-row">
+          <label class="icon-btn attach" title="ファイルを添付" aria-label="ファイルを添付">📎<input type="file" id="file-input" multiple hidden></label>
+          <textarea id="prompt" rows="1" placeholder="タスクを入力" title="Enter で送信、Shift+Enter で改行"></textarea>
+          <button type="button" class="stop-btn" id="switch-model" hidden title="実行中のタスクを止めて、選んだモデルで続きを実行">モデル切替</button>
+          <button type="button" class="stop-btn" id="stop" hidden>停止</button>
+          <button type="submit" class="send-btn" id="send" aria-label="送信">送信</button>
+        </div>
+        <div class="composer-hint" id="composer-hint"></div>
+      </form>
+    </main>
+  </div>
+
+  <dialog class="settings" id="settings">
+    <form method="dialog" class="settings-inner" id="settings-form">
+      <header><h2>設定と状態</h2><button class="icon-btn" value="close" aria-label="閉じる">✕</button></header>
+      <section>
+        <h3>リソース</h3>
+        <div class="resources" id="resources"></div>
+      </section>
+      <section>
+        <h3>キュー</h3>
+        <div id="queue-detail" class="queue-detail"></div>
+      </section>
+      <section>
+        <h3>設定</h3>
+        <p class="muted" id="settings-file"></p>
+        <div class="settings-grid" id="settings-grid"></div>
+        <div class="settings-actions">
+          <span class="muted" id="settings-msg"></span>
+          <button type="button" class="send-btn" id="save-settings">保存</button>
+        </div>
+      </section>
+      <section>
+        <button type="button" class="link-btn" id="logout">ログアウト</button>
+      </section>
+    </form>
+  </dialog>
+</body>
+</html>

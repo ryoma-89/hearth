@@ -1,0 +1,20 @@
+# Benchmark-only configuration for the long-context item (#9).
+#
+#   node bin/hearth.mjs --config bench/longctx.yaml bench --task long-context
+#
+# It lowers the high-mode compaction threshold so DSH compacts history within a
+# ~30k-token task (instead of ~90k), and uses its own state directory and port so
+# it never disturbs the normal daemon or hearth.yaml. Provider settings (STRATA,
+# DPAPI secret "strata") come from the built-in defaults.
+stateDir: ../.hearth/bench-longctx
+defaultModel: strata/auto
+defaultWorkspace: ..
+daemon:
+  port: 47911
+security:
+  allowedWorkspaceRoots:
+    - ..
+modes:
+  high:
+    compactionThresholdRatio: 0.2
+    maxSteps: 120

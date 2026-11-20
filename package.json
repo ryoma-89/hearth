@@ -1,0 +1,23 @@
+{
+  "name": "hearth",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Hearth: a local-LLM agent harness built on DeepSeek Harness (DSH) plugins.",
+  "type": "module",
+  "engines": { "node": ">=24.9.0" },
+  "bin": { "hearth": "./bin/hearth.mjs" },
+  "scripts": {
+    "test": "node --test \"test/unit/**/*.test.ts\"",
+    "test:e2e": "node --test \"test/e2e/**/*.test.ts\"",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "check": "npm run typecheck && npm test"
+  },
+  "dependencies": {
+    "@deepseek-ai/dsh": "0.2.2-rc.5",
+    "yaml": "^2.9.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.2",
+    "typescript": "~5.9.3"
+  }
+}
