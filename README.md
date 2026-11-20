@@ -1,5 +1,11 @@
 # Hearth
 
+**English summary** — Hearth is an agent harness for running long, autonomous coding/document tasks on **local LLMs** (STRATA, LM Studio, llama.cpp, any OpenAI-compatible server) on Windows. It uses [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) (DSH) as the agent runtime and adds, as DSH plugins and a local daemon: hard budgets (steps/time/tokens/failures), repair of malformed tool-call JSON, an inference queue shared by all clients, a PowerShell-AST command policy with backups before deletes, a turn-end verify-and-fix loop (Python tests, LaTeX/upLaTeX, PDF checks), task memory across context compaction, model discovery and mid-conversation model switching, a CLI, a local Web GUI, and an objective benchmark suite. Requirements: Windows 11, Node.js ≥ 24.9. Documentation is in Japanese; see [docs/setup-windows.md](docs/setup-windows.md) to get started. MIT licensed.
+
+> Hearth is an independent project. It is not affiliated with or endorsed by DeepSeek or the developers of STRATA. "DeepSeek Harness" is a trademark of DeepSeek; Hearth only uses it as an npm dependency.
+
+---
+
 ローカル LLM（STRATA / LM Studio / llama.cpp / OpenAI 互換 API）で、Codex や Claude Code のように長時間の自律作業を行うためのエージェントハーネス。
 
 エージェントループ・ツール実行・セッション永続化・圧縮・Windows サンドボックスは **DeepSeek Harness (DSH)** をそのまま使い、ローカル LLM 運用に足りない部分を **DSH プラグイン**と**常駐デーモン**で補う構成です。設計の経緯は [docs/architecture-review.md](docs/architecture-review.md) を参照してください。
@@ -30,7 +36,8 @@ DSH から引き継ぐ機能: ファイル読み書き・編集（`read` `write`
 ## セットアップ（Windows）
 
 ```powershell
-cd E:\development\hearth
+git clone https://github.com/ryoma-89/hearth.git
+cd hearth
 .\scripts\setup.ps1                 # npm install、hearth.yaml 作成、環境チェック
 .\scripts\hearth.ps1 secret set strata   # STRATA の API キーを DPAPI で暗号化保存（入力は非表示）
 .\scripts\hearth.ps1 doctor         # モデル一覧とツール呼び出し能力を確認
@@ -153,4 +160,10 @@ npm run test:e2e    # モックモデル + 実 DSH での結合テスト（ベ�
 
 ## ライセンスと第三者コード
 
-Hearth 自身のコードはこのリポジトリの作者に帰属します（ライセンス未設定）。依存する DeepSeek Harness（MIT）とその依存パッケージは npm からそのまま利用しており、改変・コピーはしていません。Codex（Apache-2.0）・OpenCode（MIT）・OpenHands（MIT）・Pi（MIT）は設計の参考にしたのみで、コードは含みません。
+Hearth は [MIT ライセンス](LICENSE) です。依存する DeepSeek Harness（MIT）とその依存パッケージは npm からそのまま利用しており、改変・コピーはしていません。Codex（Apache-2.0）・OpenCode（MIT）・OpenHands（MIT）・Pi（MIT）は設計の参考にしたのみで、コードは含みません。
+
+Hearth は独立したプロジェクトで、DeepSeek や STRATA の開発元とは関係がありません。「DeepSeek Harness」は DeepSeek の商標です。STRATA との連携は、STRATA が公開している OpenAI 互換 API と、そのホストのモデル読み込み API を利用者の PC 上で呼び出すもので、これらの内部仕様は STRATA の更新で変わる可能性があります。
+
+`docs/bench/` と `docs/*-report.md` の数値は、開発者の PC（Windows 11、RTX 5070 Ti 16GB、RAM 96GB、STRATA 上の Qwen3.8-Flash-Next 量子化モデル）での計測値です。
+
+セキュリティについては [SECURITY.md](SECURITY.md) を参照してください。

@@ -26,7 +26,7 @@ STRATA 実機では、短〜中規模の 17 タスクと GUI 操作を確認済�
 実行環境の状態:
 
 - デーモンは停止している（`hearth run` / `hearth gui` で自動起動する）。
-- 利用者の設定は `hearth.yaml`（プロジェクト直下、git 管理外）。STRATA は `:47831`、キーは DPAPI シークレット `strata`。許可フォルダは `E:/development` と `%USERPROFILE%/hearth-trials`。
+- 利用者の設定は `hearth.yaml`（プロジェクト直下、git 管理外）。STRATA は `:47831`、キーは DPAPI シークレット `strata`。許可フォルダは作業ドライブと `%USERPROFILE%/hearth-trials`。
 - タスクの記録・ログ・バックアップ・履歴は `.hearth/` にある（消さないこと。過去の実機検証の証跡）。
 
 ## 2. 検証状況の区別（重要）

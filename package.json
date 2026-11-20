@@ -3,9 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "description": "Hearth: a local-LLM agent harness built on DeepSeek Harness (DSH) plugins.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ryoma-89/hearth.git"
+  },
   "type": "module",
-  "engines": { "node": ">=24.9.0" },
-  "bin": { "hearth": "./bin/hearth.mjs" },
+  "engines": {
+    "node": ">=24.9.0"
+  },
+  "bin": {
+    "hearth": "./bin/hearth.mjs"
+  },
   "scripts": {
     "test": "node --test \"test/unit/**/*.test.ts\"",
     "test:e2e": "node --test \"test/e2e/**/*.test.ts\"",

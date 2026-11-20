@@ -15,7 +15,8 @@
 ## 2. インストール
 
 ```powershell
-cd E:\development\hearth
+git clone https://github.com/ryoma-89/hearth.git
+cd hearth
 .\scripts\setup.ps1
 ```
 
@@ -58,7 +59,7 @@ API キーは STRATA の設定画面（サービング API キー）で確認し
 
 DSH の Windows ACL サンドボックスは、作業フォルダに Low 整合性ラベルと専用の書き込み権限を設定してからコマンドを実行します。ラベルの設定には **WRITE_OWNER（フルコントロール）** が必要で、フォルダの所有者でも「変更」権限しかない場合は失敗します（`SetNamedSecurityInfoW failed (Win32 5)`。DSH の `dsh-sandbox-windows-acl` README に記載の仕様）。
 
-この PC では `E:\development` 以下のユーザー権限が「変更」だけ（`Authenticated Users: Modify` の継承）なので、そのままでは `pwsh` / `python_run` / `latex_compile` がすべて失敗します。`C:\Users\<ユーザー>` 以下はフルコントロールがあるので動きます。
+開発時の PC では作業ドライブ（`E:\development`）以下のユーザー権限が「変更」だけ（`Authenticated Users: Modify` の継承）なので、そのままでは `pwsh` / `python_run` / `latex_compile` がすべて失敗します。`C:\Users\<ユーザー>` 以下はフルコントロールがあるので動きます。
 
 確認（読み取りのみ）:
 
@@ -70,7 +71,7 @@ DSH の Windows ACL サンドボックスは、作業フォルダに Low 整合�
 
 1. 自分のアカウントにフルコントロールを付与する（フォルダの権限が変わるので、内容を理解したうえでご自身で実行してください）:
    ```powershell
-   icacls "E:\development" /grant "${env:USERDOMAIN}\${env:USERNAME}:(OI)(CI)F"
+   icacls "D:\work" /grant "${env:USERDOMAIN}\${env:USERNAME}:(OI)(CI)F"
    ```
 2. 作業フォルダをユーザープロファイル配下（例 `C:\Users\<ユーザー>\work`）に置く。
 
@@ -83,7 +84,7 @@ DSH の Windows ACL サンドボックスは、作業フォルダに Low 整合�
 ```yaml
 security:
   allowedWorkspaceRoots:
-    - E:/development
+    - D:/work
     - E:/work
 ```
 
@@ -107,7 +108,7 @@ mkdir E:\work\hearth-demo
 `scripts\hearth.cmd` は cmd/PowerShell/他プロセスから呼べます。
 
 ```powershell
-E:\development\hearth\scripts\hearth.cmd run --json --mode low --workspace E:\work\x "..."
+<hearth のフォルダ>\scripts\hearth.cmd run --json --mode low --workspace E:\work\x "..."
 ```
 
 `--json` では 1 行 1 イベントの NDJSON を標準出力に出し、最後の `{"type":"task", ...}` 行に最終状態・メトリクスが入ります。

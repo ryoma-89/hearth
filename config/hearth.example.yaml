@@ -76,7 +76,7 @@ queue:
 security:
   sandbox: workspace-write     # read-only | workspace-write | danger-full-access
   allowedWorkspaceRoots:       # tasks may only run in these folders (and below)
-    - E:/development
+    - D:/work                    # example: the folders your tasks may use
   allowOverwrite: true
   allowDangerousCommands: false   # headless runs have no approver: dangerous = refused
   protectedPaths: ['.git/**', '.hearth/**', '**/.env', '**/.env.*', '**/*.pem', '**/*.key', '**/id_rsa*']
